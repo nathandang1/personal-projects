@@ -1,0 +1,231 @@
+Orbits Class:
+
+import javax.swing.*;
+import java.awt.EventQueue;
+import java.awt.Image;
+import java.awt.Window;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+/**
+ * Write a description of class orbits here.
+ *
+ * @author Nathan Dang
+ * @version 5/20/2022
+ */
+public class orbits extends JFrame 
+{
+    // instance variables - replace the example below with your own
+    private double sm;
+    private double p1m;
+    private double p2m;
+    private double p1r;
+    private double p2r;
+    private double degreeA = 0.0;
+    private double degreeB = 0.0; 
+    private boolean run = true;
+	public double radA = 0;
+	public double radB = 0;
+    /**
+     * Constructor for objects of class orbits
+     */
+    public orbits(double sm, double p1m, double p2m, double p1r, double p2r) {
+        super("Planetary Orbit");
+        this.sm = sm;
+        this.p1m = p1m;
+        this.p2m = p2m;
+        this.p1r = p1r;
+        this.p2r = p2r;
+        setSize(1600,900);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        getContentPane().setBackground(Color.WHITE);
+
+        setVisible(true);
+        paint(getGraphics());
+    }
+
+    public void paint(Graphics g){
+        g.setColor(Color.RED);
+        paintTVP(getGraphics());
+        g.fillOval(770, 470, 30, 30);
+        g.setColor(Color.BLACK);
+
+        newPosition(getGraphics(), degreeA, degreeB);
+     
+    }
+
+    /**
+     * paint time elapsed, the velocity, radius, and period of each satellite)
+     */
+    public void paintTVP(Graphics g){
+    	g.setColor(Color.WHITE);
+    	g.fillRect(0, 0, 1600, 900);
+        g.setColor(Color.BLACK);
+        g.drawString("Velocity for satellite 1: "+ velocity1() + " m/s", 20, 45);
+        g.drawString("Velocity for satellite 2: "+ velocity2() + " m/s", 20, 63);
+        g.drawString("Period for satellite 1: "+ period1() + " seconds", 20, 81);
+        g.drawString("Period for satellite 2: "+ period2() + " seconds", 20, 99);
+        g.drawString("Gravitational potential energy for satellite 1: "+ energy1() + " joules", 20, 117);
+        g.drawString("Gravitational potential energy for satellite 2: "+ energy2() + " joules", 20, 135);
+        g.drawString("Key: 1 second = 1 Earth Year | 1 pixel between each center = 1,000,000 km" , 20, 153);
+    }
+
+    public void newPosition(Graphics g, double degreeA, double degreeB){
+    	while (run) {
+        radA = Math.toRadians(degreeA);
+        radB = Math.toRadians(degreeB);
+        g.setColor(Color.WHITE);
+        g.fillOval(775 + (int) (p1r*Math.cos(radA)), 475 + (int) (getRadius1()*Math.sin(radA)), 30, 30);
+        g.fillOval(775 + (int) (p2r*Math.cos(radB)), 475 + (int) (getRadius2()*Math.sin(radB)), 30, 30);
+        g.setColor(Color.BLACK);    
+        g.drawOval((int) (785-p1r),(int) (485-p1r),(int) (2*p1r),(int) (2*p1r));
+        g.drawOval((int) (785-p2r),(int) (485-p2r),(int) (2*p2r),(int) (2*p2r));	
+        degreeA += degreeInc1();
+        degreeB += degreeInc2();
+        radA = Math.toRadians(degreeA);
+        radB = Math.toRadians(degreeB);
+        g.setColor(Color.BLUE);
+        g.fillOval(775 + (int) (getRadius1()*Math.cos(radA)), 475 + (int) (getRadius1()*Math.sin(radA)), 30, 30);
+        g.setColor(Color.BLACK);
+        g.fillOval(775 + (int) (getRadius2()*Math.cos(radB)), 475 + (int) (getRadius2()*Math.sin(radB)), 30, 30);
+        try {Thread.sleep(58);}
+        catch(InterruptedException e){}
+        newPosition(getGraphics(), degreeA, degreeB );
+    	}	
+    }
+    /**
+    public void changeOrbit(double radius1, double radius2) {
+    	Graphics g = null;
+    	run = false;
+    	g.fillOval(775 + (int) (p1r*Math.cos(radA)), 475 + (int) (getRadius1()*Math.sin(radA)), 50, 50);
+        g.fillOval(775 + (int) (p2r*Math.cos(radB)), 475 + (int) (getRadius2()*Math.sin(radB)), 50, 50);
+    	p1r = radius1;
+    	p2r = radius2;
+    	run =true;
+        newPosition(getGraphics(), degreeA, degreeB );
+    }
+	/*
+    /**
+     * returns the period given the radius of orbit
+     */
+    public double period1(){
+        return Math.sqrt((4*(3.1416*3.1416)/(sm*6.674e-11))*(p1r*p1r*p1r*1e27));
+    }
+    public double period2(){
+        return Math.sqrt((4*(3.1416*3.1416)/(sm*6.674e-11))*(p2r*p2r*p2r*1e27));
+    }
+    //getters
+    public double getRadius1(){
+        return p1r;
+    }
+
+    public double getRadius2(){
+        return p2r;
+    }
+    //setters
+    public void setRadius1(double r1){
+        p1r = r1;
+    }
+
+    public void setRadius2(double r2){
+        p2r = r2;
+    }
+
+    //public void setMass1(double m1){
+      //  p1m = m1;
+    //}
+
+    //public void setMass2(double m2){
+      //  p2m = m2;
+    //}
+    public double degreeInc1() {
+    	return 360 / period1() * 2e6;
+    }
+    public double degreeInc2() {
+    	return 360 / period2() * 2e6;
+    }
+    /**
+     * returns velocity of planet 1
+     */
+    public double velocity1(){
+        return Math.sqrt(sm*6.674e-11/(p1r*1e9));
+    }
+
+    /**
+     * returns velocity of planet 2
+     */
+    public double velocity2(){
+        return Math.sqrt(sm*6.674e-11/(p2r*1e9));
+    }
+    /**
+     * returns potential energy for planet 1
+     */
+    public double energy1() {
+    	return -(sm*p1m*6.6743e-11)/(p1r*1e9);
+    }
+    /**
+     * returns potential energy for planet 1
+     */
+    public double energy2() {
+    	return -(sm*p2m*6.6743e-11)/(p2r*1e9);
+    }
+}
+
+
+
+
+Tester Class:
+import javax.swing.*;
+import java.util.Scanner;
+import java.awt.EventQueue;
+import java.awt.Image;
+import java.awt.Window;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+/**
+ * Write a description of class Tester here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class Tester
+{
+
+    /**
+     * An example of a method - replace this comment with your own
+     *
+     * @param  y  a sample parameter for a method
+     * @return    the sum of x and y
+     */
+    public static void main(String[] args) throws IOException{
+        orbits o1 = null;
+        //o1 = new orbits(2e29, 32e23, 43e24, 150, 200);
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Welcome to planetary orbit simulator. Enter through scientific notation. For radius, each unit entered will be equivalent to 1 billion meters.");
+        System.out.println("Enter Sun Mass:");
+        double sm = sc.nextDouble();
+        System.out.println("Enter Planet 1 Mass:");
+        double p1m = sc.nextDouble();
+        System.out.println("Enter Planet 2 Mass:");
+        double p2m = sc.nextDouble();
+        System.out.println("Enter Planet 1 Radius:");
+        double p1r = sc.nextDouble();
+        System.out.println("Enter Planet 2 Radius:");
+        double p2r = sc.nextDouble();
+        if(sm != 0.0 && p1m != 0.0 && p2m != 0.0 && p1r != 0.0 && p2r != 0.0 ) {
+        o1 = new orbits(sm, p1m, p2m, p1r, p2r );
+        }
+        else {
+        	System.out.println("One of the inputs was invalid, please try again.");
+        }
+        
+    }
+}
+
