@@ -1,0 +1,273 @@
+Evaluate Prefix Class:
+import java.io.*;
+import java.util.*;
+
+class evaluatePrefix {
+    /**
+     * checks to see whether a character is an operator or not
+     */
+    static boolean isOperator(char a){
+        if(a == '+' || a == '-' || a == '*' || a == '/' || a == '%')
+            return true;
+        else return false;
+    }
+
+    /**
+     * checks to see if a string is a valid postfix
+     */
+    static boolean isValid(String e){
+        boolean next = false;
+        int count = 2;//account for the first two chars
+        for (int i = 0; i < 2; i++){
+            if(e.charAt(i) >= 48 && e.charAt(i) <= 57 || isOperator(e.charAt(i)))
+                next = true;
+            else
+                return false;
+        }
+
+        if(next){
+            for(int i = 2; i < e.length(); i++){
+                if(e.charAt(i) >= 48 && e.charAt(i) <= 57)
+                    count++;
+                if(isOperator(e.charAt(i)))
+                    count--;
+                if(count < 0)
+                    return false;
+            }
+        }
+        return count == 1;
+    }
+
+    /**
+     * Check to see if the character is a number or not
+     */
+    static boolean isNumber(char n)
+    {
+
+        if (n >= 48 && n <= 57)
+            return true;
+        else
+            return false;
+    }
+
+    static int evaluate(String exp)
+    {
+        Stack<Integer> Stack = new Stack<Integer>();
+
+        for (int i = 0; i < exp.length(); i++) {
+
+            // Add numbers to Stack
+            if (isNumber(exp.charAt(i)))
+                Stack.push((int)(exp.charAt(i) - '0'));
+            // Use the operator
+            else {
+
+                int num2 = Stack.peek();
+                Stack.pop();
+                int num1 = Stack.peek();
+                Stack.pop();
+                //operator found
+                //use switch to add, subtract, multiply, or divide the two numbers from the stack
+                switch (exp.charAt(i)) {
+                    case '+':
+                    Stack.push(num1 + num2);
+                    break;
+                    case '-':
+                    Stack.push(num1 - num2);
+                    break;
+                    case '*':
+                    Stack.push(num1 * num2);
+                    break;
+                    case '/':
+                    Stack.push(num1 / num2);
+                    break;
+                    case '%':
+                    Stack.push(num1 % num2);
+                    break;
+                }
+            }
+        }
+
+        return Stack.peek();
+    }
+
+    /**
+     * compares two expressions to see if they're equal in value or not
+     */
+    public String compareTo(String exp, String exp2){
+        if(isValid(exp) && isValid(exp2)){
+            if(evaluate(exp) > evaluate(exp2)){
+                return exp + " is greater";
+            }
+            else if (evaluate(exp) < evaluate(exp2)){
+                return exp2 + " is greater";
+            }
+            else 
+                return "Both expressions are the equal";
+        }
+        else
+            return "invalid statements";
+    }
+}
+
+
+
+Postfix to Infix and Postfix to Prefix Class:
+import java.util.*;
+/**
+ * Write a description of class PostfixToInfix here.
+ *
+ * @author Nhat Anh Dang
+ * @version (a version number or a date)
+ */
+class TreeNode
+{
+    public char value;
+    public TreeNode left;
+    public TreeNode right;
+
+    public TreeNode(char initValue)
+    { value = initValue; left = null; right = null; }
+
+    public TreeNode(char initValue, TreeNode initLeft, TreeNode initRight)
+    { value = initValue; left = initLeft; right = initRight; }
+
+    public char getValue() { return value; }
+
+    public TreeNode getLeft() { return left; }
+
+    public TreeNode getRight() { return right; }
+
+    public void setValue(char theNewValue) { value = theNewValue; }
+
+    public void setLeft(TreeNode theNewLeft) { left = theNewLeft; }
+
+    public void setRight(TreeNode theNewRight) { right = theNewRight; }
+
+}
+
+class PostfixTransform
+{
+    // Function to check if a given token is an operator
+    public static boolean isOperator(char op) {
+        return (op == '+' || op == '-' || op == '*' || op == '/' || op == '*' || op == '%');
+    }
+
+    /**
+     * Print the postfix expression for an expression tree
+     */
+    public static void postorder(TreeNode root)
+    {
+        if (root == null) {
+            return;
+        }
+        postorder(root.left);
+        postorder(root.right);
+        System.out.print(root.value);
+    }
+
+    /**
+     * Print the infix expression for an expression tree
+     */
+    public static void inorder(TreeNode root)
+    {
+        if (root == null) {
+            return;
+        }
+
+        if (isOperator(root.value)) {
+            System.out.print("(");
+        }
+
+        inorder(root.left);
+        System.out.print(root.value);
+        inorder(root.right);
+        if (isOperator(root.value)) {
+            System.out.print(")");
+        }
+    }
+
+    public static void preorder(TreeNode root)
+    {
+        if (root == null) {
+            return;
+        }
+
+        System.out.print(root.value);
+        inorder(root.left);
+        inorder(root.right);
+    }
+
+    /**
+     * Construct the tree from the postfix expression
+     */
+    public static TreeNode construct(String postfix)
+    {
+        if (postfix == null || postfix.length() == 0) {
+            return null;
+        }
+        //Create a stack of treenodes to store pointers
+        Stack<TreeNode> s = new Stack<>();
+
+        // traverse the postfix expression
+        for (char a: postfix.toCharArray())
+        {
+            // if the current token is an operator
+            if (isOperator(a))
+            {
+                TreeNode b = s.pop();
+                TreeNode c = s.pop();
+                // create a tree node using the 'leaves' and 'stems'
+                TreeNode TreeNode = new TreeNode(a, b, c);
+
+                // push the current TreeNode into the stack
+                s.add(TreeNode);
+            }
+            // push the number as it is in operand into the stack for redistribution.
+            else {
+                s.add(new TreeNode(a));
+            }
+        }
+        //return the starting root
+        return s.peek();
+    }
+
+}
+
+
+
+
+Tester:
+
+/**
+ * Write a description of class postfixTester here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class postfixTester
+{
+    public static void main(String[] args){
+        String spacer = "---------------------------";
+        evaluatePrefix p1 = new evaluatePrefix();
+        System.out.println("Is '256*+2-' a valid postfix? " + p1.isValid("256*+2-"));
+        System.out.println("Is '-2+*652' a valid postfix? " + p1.isValid("-2+*652"));
+        System.out.println(spacer);
+        System.out.println("The value of '256*+2-' is: " + p1.evaluate("256*+2-"));
+        System.out.println("The value of '926*7%9+2*-' is: " + p1.evaluate("926*7%9+2*-"));
+        System.out.println(spacer);
+        System.out.println("Compare '57*72-+' and '85+32-*' " + p1.compareTo("57*72-+", "85+32-*"));
+        System.out.println("Compare '72*95-+' and '36*' " + p1.compareTo("72*95-+" , "36*"));
+        System.out.println(spacer);
+        PostfixTransform p2 = new PostfixTransform();
+        TreeNode root = p2.construct("582*-2-");
+        System.out.println("Convert '582*-2-' to infix ");
+        p2.inorder(root);
+        System.out.println();
+        System.out.println("Convert '582*-2-' to prefix");
+        p2.preorder(root);
+    }
+}
+
+
+
