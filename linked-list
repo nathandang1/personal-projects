@@ -1,0 +1,313 @@
+/**
+ * Write a description of interface stacks here.
+ *
+ * @author Nhat Anh Dang
+ * @version (a version number or a date)
+ */
+public interface stacks
+{
+    /**
+     * An example of a method header - replace this comment with your own
+     *
+     * @param  y a sample parameter for a method
+     * @return   the result produced by sampleMethod
+     */
+    boolean isEmpty();
+    Object peek();
+    Object pop();
+    Object push(Object obj);
+    
+}
+
+
+SinglyLinkedList:
+/**
+ * Write a description of class SinglyLinkedList here.
+ * 
+ * @author Nhat Anh Dang
+ * @version 4/25
+ */
+import java.util.*;
+@SuppressWarnings("unchecked")
+public class SinglyLinkedList <E> implements stacks
+{
+    private ListNode<E> head;
+    protected int nodeCount;
+
+    public SinglyLinkedList()
+    {
+        head = null;
+        nodeCount = 0;
+    }
+
+    public int size()
+    {
+        return nodeCount;
+    }
+
+    public void addCount()
+    {
+        nodeCount++;
+    }
+
+    public void decreaseCount()
+    {
+        nodeCount--;
+    }
+
+    public ListNode<E> getHead()
+    {
+        return head;
+    }
+
+    public void setHead(ListNode<E> head)
+    {
+        this.head = head;
+    }
+
+    public void addFirst(E value)
+    {
+        head = new ListNode<E>(value, head);
+        nodeCount++;
+    }
+
+    public void addLast(E value)
+    {
+        if (head == null)
+            addFirst(value);
+        else
+        {
+            ListNode<E> temp = head;
+            while(temp.hasNext())
+            {
+                temp = temp.getNext();
+            }
+            temp.setNext(new ListNode<E>(value));
+            nodeCount++;
+        }
+    }
+
+    public void add (int index, E value)
+    {
+        if(index<0 || index>nodeCount)
+            throw new IndexOutOfBoundsException();
+        if(index ==0)
+            addFirst(value);
+        else
+        {
+            ListNode<E> temp = head;
+            for (int i = 0; i < index-1;i++)
+            {
+                temp = temp.getNext();
+            }
+            //ListNode<E> node = new ListNode<E> (value,temp.getNext());
+            temp.setNext(new ListNode<E> (value, temp.getNext()));
+            nodeCount++;
+        }
+    }
+
+    public E removeFirst()
+    {
+        if(head==null)
+            throw new NoSuchElementException();
+        ListNode<E> temp = head;
+        head = temp.getNext();
+        nodeCount--;
+        return temp.getValue();
+    }
+
+    public E removeLast()
+    {
+        if(head==null)
+            throw new NoSuchElementException();
+        ListNode<E> temp = head;
+        while(temp.hasNext() && temp.getNext().hasNext())
+        {
+            temp = temp.getNext();
+        }
+        if(nodeCount==1)
+        {
+            nodeCount--;
+            head = null;
+            return (E)temp.getValue();
+        }
+        ListNode temp2 = temp.getNext();
+        temp.setNext(null);
+        nodeCount--;
+        return (E)temp2.getValue();
+    }
+
+    public E remove(int index)
+    {
+        if(index<0|| index >=nodeCount)
+            throw new IndexOutOfBoundsException();
+        if(index==0)
+            return removeFirst();
+        else if (index==nodeCount-1)
+            return removeLast();
+        else
+        {
+            ListNode<E> temp= head;
+            for(int count = 0; count< index-1;count++)
+            {
+                temp = temp.getNext();
+            }
+            ListNode<E> temp2 = temp.getNext();
+            temp.setNext(temp2.getNext());
+            nodeCount--;
+            return (E)temp2.getValue();
+        }
+    }
+
+    public boolean remove(E value)
+    {
+        ListNode<E> temp = head;
+        for (int i = 0; i< nodeCount;i++)
+        {
+            if(((E)temp.getValue()).equals(value))
+            {
+                remove(i);
+                return true;
+            }
+            else
+                temp = temp.getNext();
+        }
+        return false;
+    }
+    // Utility function to add an element x in the stack
+    public Object push(Object x) // insert at the beginning
+    {
+        // create new node temp and allocate memory
+        ListNode<E> temp = new ListNode<E>((E)x);
+
+        // check if stack (heap) is full. Then inserting an
+        //  element would lead to stack overflow
+        if (temp == null) {
+            System.out.print("\nHeap Overflow");
+            return x;
+        }
+
+        // initialize value into temp value field
+        temp.value = (E)x;
+
+        // put head reference into temp link
+        temp.next = head;
+
+        // update head reference
+        head = temp;
+
+        // increase the node count
+        nodeCount++;
+        return x;
+    }
+
+    // Utility function to check if the stack is empty or not
+    public boolean isEmpty()
+    {
+        return head == null;
+    }
+
+    // Utility function to return head element in a stack
+    public Object peek()
+    {
+        // check for empty stack
+        if (!isEmpty()) {
+            return head.value;
+        }
+        else {
+            System.out.println("Stack is empty");
+            return -1;
+        }
+    }
+
+    // Utility function to pop head element from the stack
+    public Object pop() // remove at the beginning
+    {
+        // check for stack underflow
+        if (head == null) {
+            System.out.print("\nStack Underflow");
+            return null;
+        }
+        ListNode<E> temp = head;
+        // update the head pointer to point to the next node
+        nodeCount--;
+        head = (head).next;
+        return temp;
+    }
+
+    public void print(){
+        if (isEmpty())
+            System.out.println("The stack is empty.");
+
+        else {
+            ListNode<E> temp = head;
+            while (temp != null) {
+
+                // print node data
+                System.out.printf("%d->", temp.value);
+
+                // assign temp link to temp
+                temp = temp.next;
+            }
+        }
+    }
+
+    public void reversePrint(){
+        if (isEmpty())
+            System.out.println("The stack is empty.");
+
+        else {
+            ListNode<E> temp = head;
+            List<E> hold = new ArrayList<>();
+
+            while (temp != null) {
+                //add values of temp to hold arrayList
+                hold.add(temp.value);
+                // assign temp link to temp
+                temp = temp.next;
+            }
+            //Print out the arraylist
+            for(int i = hold.size()-1; i >= 0; i--)
+                System.out.print(hold.get(i) + "->");
+        }
+    }
+
+    public void reversePortion(int start, int end){
+        //checks to see if the list is empty
+        if(isEmpty()|| start == end)
+            System.out.println("The list is empty");
+        ListNode<E> temp = head;
+        ListNode<E> before = null;
+        //increment until the starting index
+        for (int i = 1; temp!= null && i < start;i++){
+           before = temp;
+           temp = temp.next;
+        }
+           
+        
+        ListNode<E> current = temp;
+        ListNode<E> done = null;
+        //traverse the next element in the sublist to the front
+        while (start < end) {
+            ListNode<E> nex = temp.next;
+            temp.next = done;
+            done = temp;
+            temp = nex;
+            start++;
+        }
+        //reconnect
+        if (current != null)
+        {
+            current.next = temp;
+            if (before != null) {
+                before.next = done;
+            }
+            else {
+                head = done;  
+            }
+        }
+        
+    }
+
+}
+
