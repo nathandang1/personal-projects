@@ -1,0 +1,122 @@
+
+/**
+ * Write a description of class LiprogramAnalyzer here.
+ *
+ * @author Nhat Anh Dang
+ * @version (a version number or a date)
+ */
+public class LiprogramAnalyzer
+{
+    private String text;
+    //getter
+    public LiprogramAnalyzer(String text){
+        this.text = text;
+
+    }
+    public String phrase()
+    {
+        return text;//returns the phrase in string
+    }
+    /**
+     * takes in a letter and replace all of that letter in the phrase with '#'
+     */
+    public String mark(char letter)
+    {
+
+        String s = text.toLowerCase().replace(letter, '#');
+        return s;
+    }
+    /**
+     * isolate a word
+     */
+    private String extract(int a){
+        int first = 0 ;
+        int last = 0;
+        for(int i = 1; i < a;i++)
+        {
+            //find the index of the beginning of the word
+            if (text.charAt(a-i) == ' ' ){
+                first = a-i + 1;
+                break;
+
+            }
+
+        }
+        //find the index of the end of the word
+        for(int c = 1; c < text.length(); c++)
+        {
+            if (text.charAt(a+c) == ' '){
+                last = a+c;
+                break;
+            }
+
+        }
+        return text.substring(first, last);
+    }
+
+    /**
+     * return a list with all the words
+     */
+    public String allWordsWith(char letter)
+    {
+        String list = "";
+        String word = "";
+        for(int n = 0; n < text.length()-1; n++){
+            if (text.charAt(n) == letter){
+                word = extract(n);
+                //if the word is already in the list, don't repeat.
+                if (list.contains(word) == false)
+                    list  += word + '\n';
+            }
+
+        }
+        return list.replaceAll("\\p{Punct}", "");
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Write a description of class LiprogrammerTester here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class LiprogrammerTester
+{
+    public void test(){
+        LiprogramAnalyzer phrase1 = new LiprogramAnalyzer("Hello, I hope you had a good morning. ");
+        LiprogramAnalyzer phrase2 = new LiprogramAnalyzer("Please please nice not ");
+        LiprogramAnalyzer phrase3 = new LiprogramAnalyzer("My name is Nathan ");
+        LiprogramAnalyzer phrase4 = new LiprogramAnalyzer("The quick brown fox jumps over the lazy dog");
+
+        System.out.println("The phrase is: " + phrase1.phrase());
+        System.out.println("Replace all letter 'e' of the phrase with '#': " + phrase1.mark('e'));
+        System.out.println("All words in the phrase with the letter 'o' are: " + "\n" + phrase1.allWordsWith('o'));
+        System.out.println("--------------------------");
+        System.out.println("The phrase is: " + phrase2.phrase());
+        System.out.println("Replace all letter 'a' of the phrase with '#': " + phrase2.mark('a'));
+        System.out.println("All words in the phrase with the letter 'p' are: " +  "\n" +  phrase2.allWordsWith('p'));
+        System.out.println("--------------------------");
+        System.out.println("The phrase is: " + phrase3.phrase());
+        System.out.println("Replace all letter 'a' of the phrase with '#': " + phrase3.mark('a'));
+        System.out.println("All words in the phrase with the letter 'n' are: " + "\n" + phrase3.allWordsWith('n'));
+        System.out.println("--------------------------");
+        System.out.println("The phrase is: " + phrase4.phrase());
+        System.out.println("Replace all letter 'x' of the phrase with '#': " + phrase4.mark('x'));
+        System.out.println("All words in the phrase with the letter 'z' are: " + "\n" + phrase4.allWordsWith('z'));
+    }
+
+}
+
