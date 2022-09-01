@@ -1,0 +1,174 @@
+/**
+ * @author Nhat Anh Dang
+ * @date 9/20/2021
+ * Coins Lab
+ */
+public class coins
+{
+    //fields
+    private int cents;
+    private int quarters;
+    private int nickels;
+    private int dimes;
+    private int pennies;
+
+    /**
+     * Constructor for objects of class coins
+     */
+    public coins()
+    {
+    }
+
+    /**
+     * Overloaded constructor 
+     */
+    public coins(int cents)
+    {
+        this.cents = cents;
+    }
+
+    /**
+     * find different number of coins for each quarters, dimes, nickles, pennies.
+     */
+    public void method()
+    {
+        //if cents is negative, all coin values will be 0.
+        if (cents <0)
+        {
+            quarters = 0; dimes = 0;  nickels = 0; pennies = 0;
+        }
+        else{
+            quarters = cents / 25;
+            dimes    = (cents % 25) / 10;
+            nickels  = ((cents % 25) % 10) / 5;
+            pennies  = ((cents % 25) % 10) % 5;
+        }
+    }
+    /**
+     * get the total number of coins
+     */  
+    public int total(){
+        return quarters + dimes + nickels + pennies;
+    }
+
+    //getters
+    public int getQuarters(){
+        return quarters;
+    }
+
+    public int getNickels(){
+        return nickels;
+    }
+
+    public int getDimes(){
+        return dimes;
+    }
+
+    public int getPennies(){
+        return pennies;
+    }
+
+    /**
+     * toString method for Coins class
+     * 
+     * @return a String that contains the information in this class
+     */
+    public String toString()
+    {
+        String s = "Number of Coins: ";
+        s = s + getQuarters() + " quarters, ";
+        s = s + getDimes() + " dimes, ";
+        s = s + getNickels() + " nickels, ";
+        s = s + getPennies() + " pennies,";
+
+        return s;
+    }   
+
+    /**
+     * compare the total amount of coins for two different cent values to see if they're equal or not.
+     * 
+     */
+    public boolean equals(coins other)
+    {
+        //if number of coins is equal, return true else return false
+        if (total() == other.total()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * compare the number of coins in a class to another set of coins. 
+     * @return 1 if there are more coins in this class, than other
+     *         -1 if there are less coins, and
+     *         0 if there are the same number of coins
+     */
+    public int compareTo(coins other)
+    {   
+        //return -1 if less
+        if (total() < other.total())
+            return -1;
+        //return 0 if equal
+        else if (total() == other.total())
+            return 0;
+        //return 1 if more
+        else
+            return 1;
+    }
+}
+
+
+TESTER:
+/**
+ *Tester for coins Class
+ *
+ * @author Nhat Anh Dang
+ * @version 9/27/2021
+ */
+public class coinTester
+{
+    public void test(){
+        coins test = new coins(66);
+        coins other = new coins(38);
+        coins other1 = new coins(41);
+        coins other2 = new coins(629);
+        coins other3 = new coins(-20);
+
+        System.out.println("Calculate the number for each type of coin.");
+        test.method();
+        other.method();
+        other1.method();
+        other2.method();
+        other3.method();
+
+        System.out.println("The Total Number of Coins for the value of 66 cents is: Expected Output: 6, Output: " + test.total());
+        System.out.println("The Total Number of Coins for the value of 38 cents is: Expected Output: 6, Output: " + other.total());
+        System.out.println("The Total Number of Coins for the value of 41 cents is: Expected Output: 4, Output: " + other1.total());
+        System.out.println("The Total Number of Coins for the value of 692 cents is: Expected Output: 29, Output: " + other2.total());
+        System.out.println("The Total Number of Coins for the value of -20 cents is: Expected Output: 0 Output: " + other3.total());
+        System.out.println();
+        System.out.println("Get the number of quarters for 66 cents: Expected Output: 2, Output: " + test.getQuarters());
+        System.out.println("Get the number of dimes for 38 cents: Expected Output: 1, Output: " + other.getDimes());
+        System.out.println("Get the number of nickles for 41 cents: Expected Output: 1, Output: " + other1.getNickels());
+        System.out.println("Get the number of pennies for 629 cents: Expected Output: 4, Output: " + other2.getPennies());
+        System.out.println("Get the number of pennies for -20 cents: Expected Output: 0, Output: " + other3.getPennies());
+        System.out.println();
+        System.out.println("toString for the value of 66 cents: " + test.toString());
+        System.out.println("toString for the value of 38 cents: " + other.toString());
+        System.out.println("toString for the value of 41 cents: " + other1.toString());
+        System.out.println("toString for the value of 692 cents: " + other2.toString());
+        System.out.println("toString for the value of -20 cents: " + other3.toString());
+        System.out.println();
+        System.out.println("66 cents have the same number of coins as 38 cents: Expected Output: True, Output: " + test.equals(other));
+        System.out.println("66 cents have the same number of coins as 41 cents: Expected Output: False, Output: " + test.equals(other1));
+        System.out.println("692 cents have the same number of coins as -20 cents: Expected Output: False, Output: " + other2.equals(other3));
+        System.out.println();
+        System.out.println("Compare the number of coins in a class to another set of coins. Return -1 if there are less coins, 0 if there are the same number of coins, 1 if there are more coins.");
+        System.out.println("Compare the number of coins in 38 cents to 41 cents: Expected Output: 1, Output: " + other.compareTo(other1));
+        System.out.println("Compare the number of coins in 66 cents to 38 cents: Expected Output: 0, Output: " + test.compareTo(other));
+        System.out.println("Compare the number of coins in -20 cents to 692 cents: Expected Output: -1, Output: " + other3.compareTo(other2));
+
+    }
+}
