@@ -1,0 +1,35 @@
+
+/**
+ * Write a description of class PolygonArea here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class PolygonArea
+{
+    public static void main(String[] args) {
+        double[] x = {8.2, 7.1, 5.2, 3.4, 5.5, 6.6};
+        double[] y = {5.5, 6.3, 4.8, 3.9, 4.6, 2.1};
+        int i = 0;
+        double area = 0;
+        area = triangleArea(x, y, i, area);
+        System.out.println(area);
+    }
+
+    public static double triangleArea (double[] x, double[] y, int i, double area){
+        if (i == 4){
+            return 1;
+        } else{
+            area = area + (x[0]*y[i+1] + x[i+1]*y[i+2] + x[i+2]*y[0] - y[0]*x[i+1] - y[i+1]*x[i+2] - y[i+2]*x[0])/2;
+            triangleArea(x, y, i+1, area);
+            System.out.println(area);
+            return area;
+        }
+
+    }
+
+}
+
+
+
+
