@@ -1,0 +1,161 @@
+Words:
+import java.util.Arrays;
+import java.util.Scanner;
+/**
+ * Write a description of class words here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class Words
+{
+    //fields
+    private String word;
+    private String alphabetized;
+    /**
+     * declare fields from the object
+     */
+    public Words(String word)
+    {
+        this.word = word;
+        this.alphabetized = alphabet(word);
+    }
+    public String getAlphabetized()
+    {
+        return alphabetized;//return alphabetized as a String
+    }
+    /**
+     * Sorts a word alphabetically
+     */
+    private String alphabet(String a)
+    {
+        char charArray[] = a.toCharArray();
+        Arrays.sort(charArray);
+        return new String(charArray);
+    }
+    /**
+     * checks to see if two words are anagrams. Alphabetize each word and compare.
+     */
+    public boolean areAnagrams(String str)
+    {
+        if (alphabet(str).equals(alphabetized))
+            return true;
+        return false;
+    }
+}
+
+
+
+WordList:
+import java.io.*;
+import java.util.*;
+/**
+ * Write a description of class CreateArrayFromFile here.
+ *
+ * @author Nathan Dang
+ * @version (a version number or a date)
+ */
+public class WordList
+{
+    //declare fields
+    private String anagram = "";
+    private String fileName;
+    private ArrayList<String> file;
+    private int wordLength;
+    public WordList()
+    {
+    }
+    
+    /**
+     * Take input file name and limit the word length.
+     */
+    public WordList(String fileName, int wordLength)throws IOException{
+        this.fileName = fileName;
+        this.wordLength = wordLength;
+        file = new ArrayList<String>() ;
+        fillArray();
+    }
+
+
+   
+    /**
+     * fill array with words that have less than limit character
+     */
+    public void fillArray() throws IOException{
+        File input = new File(fileName);
+        Scanner words = new Scanner(input);
+        while (words.hasNextLine()){
+            String line = words.nextLine();
+            if (line.length() <= wordLength){
+                file.add(line);
+
+
+            }
+        }
+        words.close();
+        
+    }
+
+    public void newWord(String word){
+        file.add(word);//add word to array
+    }
+    
+    /**
+     * return all words in a file that are an anagram of the given word.
+     */
+    public String anagrams(String word)
+    {
+        Words w = new Words(word);
+        Words w1;
+        for (int i = 0; i < file.size(); i++)
+        {
+            w1 = new Words(file.get(i));
+            if (w.getAlphabetized().equals(w1.getAlphabetized()))//alphabetize both words and compare
+                anagram += file.get(i) + " ";
+        }
+        return anagram;
+    }
+    
+}
+
+Tester:
+import java.util.Scanner;
+import java.io.*;
+import java.util.*;
+/**
+ * Write a description of class tester here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class tester
+{
+    public void test()   throws IOException
+    {
+        System.out.println("Input file name to access: ");
+        Scanner textFile = new Scanner(System.in);
+        String fileName = textFile.nextLine();
+        System.out.println("What should the maximum length of the word be?");
+        Scanner wordMax = new Scanner(System.in);
+        int wordLength = wordMax.nextInt();
+
+        String userInput = "";
+        while (!userInput.equals("finish")){
+
+            WordList test = new WordList(fileName,  wordLength);
+            System.out.println("Input the word that you want to find the anagrams of. Type 'finish' to end the program.");
+            Scanner word = new Scanner(System.in);
+            userInput = word.nextLine();
+            String result = test.anagrams(userInput);
+            System.out.println(result);
+            word.close();
+        }
+
+        System.out.println("Thank you for playing!");
+    }
+}
+
+
+
+
+
