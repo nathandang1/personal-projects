@@ -1,0 +1,89 @@
+
+import javax.swing.*;
+import java.awt.Color;
+import java.awt.Graphics;
+/**
+ * Write a description of class binaryEquation here.
+ *
+ * @author Nathan Dang
+ * @version (a version number or a date)
+ */
+public class SelectionSortGUI  extends JFrame{
+    JLabel number;
+    public static int[] arr = {42, 72, 312, 256, 34, 92, 75, 121, 67, 90, 132, 150};
+    public SelectionSortGUI()  {
+        super("Selection Sort");
+        setSize(1000,800);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+        paint(getGraphics());
+        /**
+         * selection sort
+         */
+        for(int i = 0; i < arr.length; i++) {
+            int minValue = arr[i];
+            int minIndex = i;
+            for(int j = i; j < arr.length;j++) {
+                if(arr[j] < minValue) {
+                    minIndex = j;
+                    minValue = arr[j];
+                }
+            }
+            swapBar(getGraphics(), i, minIndex);//runs the swap method afterwards
+            int temp = arr[i];
+            arr[i] = arr[minIndex];
+            arr[minIndex] = temp;
+            try {Thread.sleep(1000);}
+            catch(InterruptedException e){}
+
+        }
+    }
+
+    /**
+     * paint the starting array
+     */
+    public void paint(Graphics g) {
+        for(int i = 0; i < arr.length;i++) {
+
+            if(i%2==0)
+                g.setColor(Color.BLUE);
+            else
+                g.setColor(Color.RED);
+            g.drawString(Integer.toString(arr[i]), 50* i, 700-arr[i]*2);
+            g.fillRect(50*i, 700-arr[i]*2, 50, arr[i]*2);
+        }
+
+    }
+
+    /**
+     * method to swap the bars on the graphics
+     */
+    public void swapBar(Graphics g, int a, int b) {
+        //delete the two bars
+
+        g.clearRect(50*a, 700-arr[a]*2-30, 50, 1000);
+        g.clearRect(50*b, 700-arr[b]*2-30, 50, 1000);
+        if(a%2 == 0)
+            g.setColor(Color.BLUE);
+        else
+            g.setColor(Color.RED);
+        //replace the first bar with the second bar
+        g.fillRect(50*a, 700-arr[b]*2, 50, arr[b]*2);
+        g.drawString(Integer.toString(arr[b]), 50*a, 700-arr[b]*2);
+        if(b%2 == 0)
+            g.setColor(Color.BLUE);
+        else
+            g.setColor(Color.RED);
+        //replace the second bar with the first bar
+        g.fillRect(50*b, 700-arr[a]*2, 50, arr[a]*2);
+        g.drawString(Integer.toString(arr[a]), 50*b, 700-arr[b]*2);
+
+    }
+}
+
+
+
+
+
+
+
