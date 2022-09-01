@@ -1,0 +1,81 @@
+import java.util.*;
+/**
+ * Write a description of class binaryEquation here.
+ *
+ * @author Nathan Dang
+ * @version (a version number or a date)
+ */
+public class binaryCalculator
+{
+    public static void main(String[] args) { 
+        //record the desired input.
+        System.out.println("Welcome to the binary number calculator"); 
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Would you like to add or multiply? Type '+' for addition, 'x' for multiplication");
+        String method = sc.nextLine();
+        System.out.println("Please enter first binary number"); 
+        String a = sc.nextLine(); 
+
+        for (int i = 0; i < a.length(); i ++){
+            if (Character.getNumericValue(a.charAt(i)) > 1){//if the integers inputted is not consisted of 0 and 1s, invalid number.
+                System.out.println("Invalid number. The number above is not a binary number.");
+                sc.close();
+                return;
+            }
+        }
+        System.out.println("Please enter second binary number"); 
+        String b = sc.nextLine();
+
+        for (int j = 0; j < b.length(); j++){
+            if (Character.getNumericValue(b.charAt(j)) > 1){
+                System.out.println("Invalid number. The number above is not a binary number.");
+                sc.close();
+                return;
+            }
+        }
+        if (method.equals("+")){//checks whether the input for the desired method is valid (+ or x)
+            System.out.println("The sum is: " + add(a, b));
+        }
+        else if (method.equals("x")){
+            System.out.println("The product is: " + Integer.toBinaryString(multiply(Integer.parseInt(a,2), Integer.parseInt(b,2))));
+        }
+        else {
+            System.out.println("Your input for whether to add or multiply was invalid.");
+            sc.close();
+        }
+    }
+
+    /**
+     * turn both binary strings into their base 10 counterpart and add.
+     * turn the base 10 sum back into binary form.
+     */
+    public static String add(String x, String y){
+        int b1 = Integer.parseInt(x, 2); 
+        int b2 = Integer.parseInt(y, 2);
+        int sum = b1 + b2; 
+        return Integer.toBinaryString(sum);
+    }
+    /**
+     * recursively add x to itself until y is equal to 0 (nothing left to add)
+     */
+    public static int multiply(int x, int y){
+        if (y == 0)
+            return 0;
+        else{
+            y--;
+            return x + multiply(x, y);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
